@@ -14,16 +14,25 @@ namespace DZ_ASP_Validation_03_11.Controllers
         {
             work = new UserWork();
         }
+        [HttpGet("GetUsersNames")]
+        public IEnumerable<string>GetUsersNames()=>work.UserRepos.GetUsersNames();
         [HttpGet("GetUsers")]
-        public IEnumerable<string>GetUsers()=>work.UserRepos.GetUsers();
+        public IEnumerable<User> GetUsers() => work.UserRepos.GetUsers();
         [HttpPost("Registration")]
-        public HttpStatusCode Registration([FromForm]User user)
+        public HttpStatusCode Registration([FromForm]DataModel dataModel)
         {
-            if(!TryValidateModel(user,nameof(User)))return HttpStatusCode.BadRequest;
+            User user = new User() { Name = dataModel.Login, Password = dataModel.Password };
+            if (!TryValidateModel(user,nameof(User)))return HttpStatusCode.BadRequest;
             ModelState.ClearValidationState(nameof(User));
             return work.UserRepos.Add(user);
-            //work.UserRepos.AddUser(user);
-            //return HttpStatusCode.OK;
+        }
+        [HttpPost("Autorisation")]
+        public HttpStatusCode Autorisation([FromForm] DataModel dataModel)
+        {
+            User user = new User() { Name = dataModel.Login, Password = dataModel.Password };
+            if (!TryValidateModel(user, nameof(User))) return HttpStatusCode.BadRequest;
+            ModelState.ClearValidationState(nameof(User));
+            return work.UserRepos.Search(user);
         }
     }
 }

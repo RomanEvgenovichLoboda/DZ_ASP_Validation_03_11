@@ -9,13 +9,13 @@ namespace Library.Models
 {
     public class UserWork
     {
-        protected HostContext hostContext;
+        protected HostContext hostContext = null;
         protected UserRepos userRepos;
-        public UserRepos UserRepos 
+        public UserRepos UserRepos
         {
             get
             {
-                if(userRepos == null) userRepos = new UserRepos(hostContext);
+                if (userRepos == null) userRepos = new UserRepos(hostContext);
                 return userRepos;
             }
         }

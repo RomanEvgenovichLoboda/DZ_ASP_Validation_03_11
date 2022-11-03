@@ -14,27 +14,21 @@ namespace Library.Models.Repositories
         {
             this.context = context;
         }
-        public IEnumerable<string>GetUsers()=>context.Users.Select(it => it.Name);
-        public bool AddUser(User entity)
-        {
-            foreach (var item in context.Users)
-            {
-                if (entity.Name == item.Name) return false;
-            }
-            context.Add(entity);
-            context.SaveChanges();
-            return true;
-        }
-
+        public IEnumerable<string>GetUsersNames()=>context.Users.Select(it => it.Name);
+        public IEnumerable<User> GetUsers() => context.Users;
         public HttpStatusCode Add(User user)
         {
-            foreach (var item in context.Users)
-            {
-                if (user.Name == item.Name) return HttpStatusCode.Conflict;
-            }
+            User? temp = context.Users.FirstOrDefault(x => x.Name == user.Name);
+            if (temp != null) return HttpStatusCode.PreconditionFailed;
             context.Add(user);
             context.SaveChanges();
             return HttpStatusCode.OK;
+        }
+        public HttpStatusCode Search(User user)
+        {
+            User? temp = context.Users.FirstOrDefault(x => x.Name == user.Name && x.Password == user.Password);
+            if (temp != null) return HttpStatusCode.OK;
+            return HttpStatusCode.Forbidden;//Not Acceptable
         }
     }
 }

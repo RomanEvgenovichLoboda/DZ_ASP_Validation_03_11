@@ -19,21 +19,21 @@ namespace DZ_ASP_Validation_03_11.Controllers
         public HttpStatusCode Registration([FromForm]DataModel dataModel)
         {
             if (!TryValidateModel(dataModel,nameof(DataModel)))return HttpStatusCode.BadRequest;
-            ModelState.ClearValidationState(nameof(DataModel));
+            ModelState.ClearValidationState(nameof(dataModel));
             return work.UserRepos.Add(dataModel);
         }
         [HttpPost("Autorisation")]
         public HttpStatusCode Autorisation([FromForm] DataModel dataModel)
         {
             if (!TryValidateModel(dataModel, nameof(DataModel))) return HttpStatusCode.BadRequest;
-            ModelState.ClearValidationState(nameof(DataModel));
+            ModelState.ClearValidationState(nameof(dataModel));
             return work.UserRepos.Search(dataModel);
         }
         [HttpPost("ChengePassword")]
         public HttpStatusCode ChengePassword([FromForm] ChengeDataModel chengeData)
         {
             if (!TryValidateModel(chengeData, nameof(ChengeDataModel))) return HttpStatusCode.BadRequest;
-            ModelState.ClearValidationState(nameof(ChengeDataModel));
+            ModelState.ClearValidationState(nameof(chengeData));
             return work.UserRepos.ChengePassword(chengeData);
         }
     }

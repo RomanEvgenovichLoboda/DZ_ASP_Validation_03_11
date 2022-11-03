@@ -10,10 +10,7 @@ namespace DZ_ASP_Validation_03_11.Controllers
     public class UserController:Controller
     {
         UserWork work;
-        public UserController()
-        {
-            work = new UserWork();
-        }
+        public UserController() { work = new UserWork(); }
         [HttpGet("GetUsersNames")]
         public IEnumerable<string>GetUsersNames()=>work.UserRepos.GetUsersNames();
         [HttpGet("GetUsers")]
@@ -21,18 +18,23 @@ namespace DZ_ASP_Validation_03_11.Controllers
         [HttpPost("Registration")]
         public HttpStatusCode Registration([FromForm]DataModel dataModel)
         {
-            User user = new User() { Name = dataModel.Login, Password = dataModel.Password };
-            if (!TryValidateModel(user,nameof(User)))return HttpStatusCode.BadRequest;
-            ModelState.ClearValidationState(nameof(User));
-            return work.UserRepos.Add(user);
+            if (!TryValidateModel(dataModel,nameof(DataModel)))return HttpStatusCode.BadRequest;
+            ModelState.ClearValidationState(nameof(DataModel));
+            return work.UserRepos.Add(dataModel);
         }
         [HttpPost("Autorisation")]
         public HttpStatusCode Autorisation([FromForm] DataModel dataModel)
         {
-            User user = new User() { Name = dataModel.Login, Password = dataModel.Password };
-            if (!TryValidateModel(user, nameof(User))) return HttpStatusCode.BadRequest;
-            ModelState.ClearValidationState(nameof(User));
-            return work.UserRepos.Search(user);
+            if (!TryValidateModel(dataModel, nameof(DataModel))) return HttpStatusCode.BadRequest;
+            ModelState.ClearValidationState(nameof(DataModel));
+            return work.UserRepos.Search(dataModel);
+        }
+        [HttpPost("ChengePassword")]
+        public HttpStatusCode ChengePassword([FromForm] ChengeDataModel chengeData)
+        {
+            if (!TryValidateModel(chengeData, nameof(ChengeDataModel))) return HttpStatusCode.BadRequest;
+            ModelState.ClearValidationState(nameof(ChengeDataModel));
+            return work.UserRepos.ChengePassword(chengeData);
         }
     }
 }

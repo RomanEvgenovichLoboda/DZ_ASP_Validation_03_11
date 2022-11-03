@@ -3,17 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Library.Models
 {
-    public class DataModel
+    public class ChengeDataModel:DataModel
     {
         [Unicode]
         [Required]
         [MinLength(5)]
         [MaxLength(24)]
-        public string Login { get; set; }
-        [Unicode]
-        [Required]
-        [MinLength(5)]
-        [MaxLength(24)]
-        public string Password { get; set; }
+        public string NewPassword { get; set; }
     }
 }

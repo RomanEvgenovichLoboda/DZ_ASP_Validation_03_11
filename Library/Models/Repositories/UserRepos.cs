@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
 
 namespace Library.Models.Repositories
 {
@@ -16,19 +11,31 @@ namespace Library.Models.Repositories
         }
         public IEnumerable<string>GetUsersNames()=>context.Users.Select(it => it.Name);
         public IEnumerable<User> GetUsers() => context.Users;
-        public HttpStatusCode Add(User user)
+        public HttpStatusCode Add(DataModel user)
         {
-            User? temp = context.Users.FirstOrDefault(x => x.Name == user.Name);
+            User? temp = context.Users.FirstOrDefault(x => x.Name == user.Login);
             if (temp != null) return HttpStatusCode.PreconditionFailed;
-            context.Add(user);
+            temp = new User() { Name = user.Login, Password = user.Password };
+            context.Add(temp);
             context.SaveChanges();
-            return HttpStatusCode.OK;
+            return HttpStatusCode.Created;
         }
-        public HttpStatusCode Search(User user)
+        public HttpStatusCode Search(DataModel user)
         {
-            User? temp = context.Users.FirstOrDefault(x => x.Name == user.Name && x.Password == user.Password);
+            User? temp = context.Users.FirstOrDefault(x => x.Name == user.Login && x.Password == user.Password);
             if (temp != null) return HttpStatusCode.OK;
             return HttpStatusCode.Forbidden;//Not Acceptable
+        }
+        public HttpStatusCode ChengePassword(ChengeDataModel chengeData)
+        {
+            var temp = context.Users.FirstOrDefault(x => x.Name == chengeData.Login && x.Password == chengeData.Password);
+            if(temp != null) 
+            {
+                temp.Password = chengeData.NewPassword;
+                context.SaveChanges();
+                return HttpStatusCode.OK;
+            }
+            return HttpStatusCode.NotAcceptable;
         }
     }
 }
